@@ -5,6 +5,8 @@ import helloWorldAdapter from "@aibos/helloworld";
 import listenerDemoAdapter from "@aibos/listener-demo";
 import accountingAdapter from "@aibos/accounting";
 import inventoryAdapter from "@aibos/inventory";
+import purchasesAdapter from "@aibos/purchases";
+import salesAdapter from "@aibos/sales";
 
 type InstalledApp = {
   id: string;
@@ -21,7 +23,7 @@ export function KernelApp() {
     (async () => {
       await kernel.boot({
         mode: "dev",
-        adapters: [helloWorldAdapter, listenerDemoAdapter, accountingAdapter, inventoryAdapter]
+        adapters: [helloWorldAdapter, listenerDemoAdapter, accountingAdapter, inventoryAdapter, purchasesAdapter, salesAdapter]
       });
       const loadedApps = kernel.apps.list();
       setApps(loadedApps);

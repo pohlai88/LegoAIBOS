@@ -82,6 +82,12 @@ importers:
       '@aibos/listener-demo':
         specifier: workspace:*
         version: link:../../packages/listener-demo
+      '@aibos/purchases':
+        specifier: workspace:*
+        version: link:../../packages/purchases
+      '@aibos/sales':
+        specifier: workspace:*
+        version: link:../../packages/sales
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -208,6 +214,37 @@ importers:
       typescript:
         specifier: ^5.6.3
         version: 5.9.3
+
+  packages/purchases:
+    dependencies:
+      '@aibos/kernel-sdk':
+        specifier: workspace:*
+        version: link:../kernel-sdk
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      zod:
+        specifier: ^3.23.8
+        version: 3.25.76
+
+  packages/sales:
+    dependencies:
+      '@aibos/kernel-sdk':
+        specifier: workspace:*
+        version: link:../kernel-sdk
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      zod:
+        specifier: ^3.24.1
+        version: 3.25.76
+    devDependencies:
+      typescript:
+        specifier: ^5.6.3
+        version: 5.9.3
+      vitest:
+        specifier: ^2.1.4
+        version: 2.1.9(@types/node@22.19.1)
 
   tests:
     devDependencies:

@@ -91,7 +91,7 @@ describe("Stock Movement → Auto-draft JE Integration (v1.0.3/v1.2.0)", () => {
     
     // Verify versions
     expect(invManifest.version).toBe("1.0.3");
-    expect(accManifest.version).toBe("1.2.0");
+      expect(accManifest.version).toBe("1.5.0");  // v1.5.0: Now consumes 4 event lanes
   });
 });
 
