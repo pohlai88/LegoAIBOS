@@ -1,0 +1,25 @@
+{
+  "name": "@aibos/accounting",
+  "version": "1.0.1",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@aibos/kernel-sdk": "workspace:*",
+    "zod": "^3.23.8",
+    "react": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.10",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4"
+  }
+}

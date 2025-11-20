@@ -1,0 +1,11 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "SSOT Precommit Gate: typecheck"
+pnpm -r typecheck || exit 1
+
+echo "SSOT Precommit Gate: lint"
+pnpm -r lint || exit 1
+
+echo "SSOT Precommit Gate: test"
+pnpm -r test || exit 1
