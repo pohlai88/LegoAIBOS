@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
 import kernel from "../../apps/kernel/src/index";
 
-import helloWorldAdapter from "@aibos/helloworld";
-import listenerDemoAdapter from "@aibos/listener-demo";
+import helloWorldAdapter from "../../packages/helloworld/src/index";
+import listenerDemoAdapter from "../../packages/listener-demo/src/index";
 import { createHelloEmitter } from "../../packages/helloworld/src/emitHelloEvent";
 import { createHelloListener } from "../../packages/listener-demo/src/listenHelloEvent";
 

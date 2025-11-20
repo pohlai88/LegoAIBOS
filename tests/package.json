@@ -1,0 +1,14 @@
+{
+  "name": "@aibos/tests",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "typecheck": "echo 'No typecheck for integration tests' && exit 0",
+    "lint": "echo 'No lint for integration tests' && exit 0",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.4",
+    "@types/node": "^22.0.0"
+  }
+}
