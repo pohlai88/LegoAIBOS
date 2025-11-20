@@ -81,3 +81,9 @@ export function defineApp(manifest: AppManifest) {
 
 // v1.1.0: re-export lanes types
 export * from "./lanes";
+
+// v1.1.1: Adapter module typing (optional registerListeners hook for kernel boot auto-registration)
+export type AdapterModule = {
+  manifest: AppManifest;
+  registerListeners?: (lanes: any) => void; // lanes typed at call site to avoid premature cross-version coupling
+};
