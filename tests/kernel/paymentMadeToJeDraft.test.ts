@@ -17,15 +17,16 @@ describe("Purchases PAYMENT_MADE → Accounting AP-clearing JE draft", () => {
     });
 
     const draft = onPaymentMade(pay as any, { dryRun: true });
-    const td = draft.lines.reduce((s: number, l: any) => s + l.debit, 0);
-    const tc = draft.lines.reduce((s: number, l: any) => s + l.credit, 0);
+    const td = (draft as any).lines.reduce((s: number, l: any) => s + l.debit, 0);
+    const tc = (draft as any).lines.reduce((s: number, l: any) => s + l.credit, 0);
 
     expect(td).toBe(120);
     expect(tc).toBe(120);
 
-    expect(draft.lines.some((l: any) => l.accountId === "2010" && l.debit === 120)).toBe(true);
-    expect(draft.lines.some((l: any) => l.accountId === "1020" && l.credit === 120)).toBe(true);
-    expect(draft.allowOppositeNormalBalance).toBe(true);
+    expect((draft as any).lines.some((l: any) => l.accountId === "2010" && l.debit === 120)).toBe(true);
+    expect((draft as any).lines.some((l: any) => l.accountId === "1020" && l.credit === 120)).toBe(true);
+    // v1.6.1: Contra allowed via sourceEvent allowlist, flag no longer needed
+    expect(draft.sourceEvent).toBe("purchases.PAYMENT_MADE");
   });
 
   it("drafts balanced JE for cash payment", () => {
@@ -39,14 +40,15 @@ describe("Purchases PAYMENT_MADE → Accounting AP-clearing JE draft", () => {
     });
 
     const draft = onPaymentMade(pay as any, { dryRun: true });
-    const td = draft.lines.reduce((s: number, l: any) => s + l.debit, 0);
-    const tc = draft.lines.reduce((s: number, l: any) => s + l.credit, 0);
+    const td = (draft as any).lines.reduce((s: number, l: any) => s + l.debit, 0);
+    const tc = (draft as any).lines.reduce((s: number, l: any) => s + l.credit, 0);
 
     expect(td).toBe(50);
     expect(tc).toBe(50);
 
-    expect(draft.lines.some((l: any) => l.accountId === "2010" && l.debit === 50)).toBe(true);
-    expect(draft.lines.some((l: any) => l.accountId === "1010" && l.credit === 50)).toBe(true);
+    expect((draft as any).lines.some((l: any) => l.accountId === "2010" && l.debit === 50)).toBe(true);
+    expect((draft as any).lines.some((l: any) => l.accountId === "1010" && l.credit === 50)).toBe(true);
+    expect(draft.sourceEvent).toBe("purchases.PAYMENT_MADE");
   });
 
   it("manifests declare emits/consumes lanes", () => {

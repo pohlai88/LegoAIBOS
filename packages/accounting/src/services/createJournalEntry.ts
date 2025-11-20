@@ -10,6 +10,12 @@ const JournalLineSchema = z.object({
   message: "A line cannot have both debit and credit."
 });
 
+const TRUSTED_SOURCE_EVENTS = [
+  "inventory.STOCK_MOVED",
+  "sales.CASH_RECEIPT_POSTED",
+  "purchases.PAYMENT_MADE"
+] as const;
+
 export const CreateJournalEntryInputSchema = z.object({
   postingDate: z.string().min(1),
   companyId: z.string().min(1),
@@ -18,6 +24,8 @@ export const CreateJournalEntryInputSchema = z.object({
   referenceDate: z.string().optional(),
   userRemark: z.string().optional(),
   allowOppositeNormalBalance: z.boolean().optional(),
+  // v1.6.1: Guard hardening – trusted automation shortcut
+  sourceEvent: z.string().optional(),
   lines: z.array(JournalLineSchema).min(2)
 }).refine(d => {
   const td = d.lines.reduce((s, l) => s + l.debit, 0);
@@ -27,6 +35,7 @@ export const CreateJournalEntryInputSchema = z.object({
   message: "Journal must balance: totalDebit = totalCredit and both > 0."
 }).refine(d => {
   const allowOpposite = d.allowOppositeNormalBalance === true;
+  const trusted = !!d.sourceEvent && TRUSTED_SOURCE_EVENTS.includes(d.sourceEvent as any);
 
   for (const line of d.lines) {
     const nb = getAccountNormalBalance(line.accountId);
@@ -35,14 +44,15 @@ export const CreateJournalEntryInputSchema = z.object({
     const debitOnly = line.debit > 0 && line.credit === 0;
     const creditOnly = line.credit > 0 && line.debit === 0;
 
-    if (!allowOpposite) {
+    // Normal balance mismatch (contra) permitted if explicit override OR trusted automation sourceEvent
+    if (!allowOpposite && !trusted) {
       if (nb === "debit" && creditOnly) return false;
       if (nb === "credit" && debitOnly) return false;
     }
   }
   return true;
 }, {
-  message: "Line normal balance mismatch. Use correct Dr/Cr per account or set allowOppositeNormalBalance=true for adjustments."
+  message: "Line normal balance mismatch. Use correct Dr/Cr OR set allowOppositeNormalBalance=true OR supply trusted sourceEvent."
 });
 
 export const CreateJournalEntryOutputSchema = z.object({
@@ -57,7 +67,7 @@ export type CreateJournalEntryOutput = z.infer<typeof CreateJournalEntryOutputSc
 
 export const createJournalEntryService = {
   key: "accounting.createJournalEntry",
-  description: "Creates a balanced journal entry draft with COA normal balance validation (v1.1.0). Handler is local-only stub.",
+  description: "Creates a balanced journal entry draft with COA normal balance validation (v1.1.0) + sourceEvent guard shortcut (v1.6.1). Handler is local-only stub.",
   inputSchema: CreateJournalEntryInputSchema,
   outputSchema: CreateJournalEntryOutputSchema,
 

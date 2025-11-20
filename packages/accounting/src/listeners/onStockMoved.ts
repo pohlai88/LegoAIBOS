@@ -47,7 +47,8 @@ export function onStockMoved(payload: StockMovedPayload) {
     referenceNo: payload.refDoc,
     userRemark: `Auto-draft from stock movement: ${payload.itemCode}`,
     lines,
-    allowOppositeNormalBalance: true  // Stock movements regularly use contra entries (CR asset, DR liability)
+    // v1.6.1: sourceEvent allowlist provides contra permission implicitly
+    sourceEvent: "inventory.STOCK_MOVED"
   };
 
   const parsed = createJournalEntryService.inputSchema.safeParse(draft);

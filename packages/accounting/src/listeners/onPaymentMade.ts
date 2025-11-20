@@ -37,9 +37,8 @@ export function onPaymentMade(
     currency: payload.currency,
 
     referenceNo: payload.paymentNo,
-
-    // Contra is VALID here: DR AP reduces liability.
-    allowOppositeNormalBalance: true,
+    // v1.6.1: sourceEvent allowlist - contra (DR liability) permitted implicitly
+    sourceEvent: "purchases.PAYMENT_MADE",
 
     lines: [
       {

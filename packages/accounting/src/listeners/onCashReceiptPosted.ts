@@ -36,7 +36,8 @@ export function onCashReceiptPosted(payload: CashReceiptPostedPayload) {
       { accountId: bankOrCashAcc, debit: payload.amount, credit: 0, memo: "Cash receipt" },
       { accountId: "1310", debit: 0, credit: payload.amount, memo: "Clear trade receivables" },
     ],
-    allowOppositeNormalBalance: true,  // AR clearing requires credit to debit-normal asset
+    // v1.6.1: sourceEvent allowlist grants contra permission
+    sourceEvent: "sales.CASH_RECEIPT_POSTED"
   };
 
   // SSOT guard applies here too
