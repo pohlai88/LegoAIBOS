@@ -10,7 +10,7 @@ import { STOCK_MOVED_EVENT } from "./events/emitStockMovedEvent";
 const manifest = defineApp({
   id: "inventory",
   name: "Inventory",
-  version: "1.0.2",
+  version: "1.0.3",
 
   ownedEntities: ["StockItem"],
   permissions: ["inventory:read", "inventory:write"],

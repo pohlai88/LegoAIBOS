@@ -1,26 +1,21 @@
 // packages/accounting/src/events/registerInventoryListeners.ts
+import { onStockMoved, type StockMovedPayload } from "../listeners/onStockMoved";
+
 export type OnEventLane = (eventType: string, handler: (evt: any) => void) => void;
 
 export const STOCK_MOVED_EVENT = "inventory.STOCK_MOVED" as const;
 
-export type StockMovePosted = {
-  id: string;
-  companyId: string;
-  itemCode: string;
-  qtyBefore: number;
-  qtyAfter: number;
-  qtyDelta: number;
-  reason: string;
-  postingDate: string;
-  status: "posted";
-};
-
-export function registerInventoryEventListeners(
-  onEvent: OnEventLane,
-  handleStockMoved?: (payload: StockMovePosted) => void
-) {
-  // Default behavior: just log for proof
-  onEvent(STOCK_MOVED_EVENT, (evt: { type: string; payload: StockMovePosted }) => {
-    handleStockMoved?.(evt.payload);
+/**
+ * v1.2.0: Wire Inventory event consumers
+ * Converts STOCK_MOVED events into JE drafts automatically
+ */
+export function registerInventoryEventListeners(onEvent: OnEventLane) {
+  onEvent(STOCK_MOVED_EVENT, (evt: { type: string; payload: StockMovedPayload }) => {
+    try {
+      const result = onStockMoved(evt.payload);
+      console.log(`[Accounting] Auto-drafted JE from stock movement:`, result);
+    } catch (error: any) {
+      console.error(`[Accounting] Failed to draft JE from STOCK_MOVED:`, error.message);
+    }
   });
 }

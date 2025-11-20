@@ -64,3 +64,15 @@ export type StockMovePosted = StockMoveDraft & {
   qtyAfter: number;
   status: "posted";
 };
+
+// v1.0.3: Event payload for STOCK_MOVED with valuation
+export type StockMovedPayload = {
+  companyId: string;
+  itemCode: string;
+  qty: number;              // absolute quantity moved
+  direction: "IN" | "OUT";  // derived from qtyDelta sign
+  unitCost: number;         // mock valuation for now
+  warehouseId?: string;
+  refDoc?: string;          // e.g. GRN-0001, DO-0002
+  postingDate: string;      // YYYY-MM-DD
+};

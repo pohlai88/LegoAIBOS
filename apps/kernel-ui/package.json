@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@aibos/accounting": "workspace:*",
+    "@aibos/inventory": "workspace:*",
     "@aibos/helloworld": "workspace:*",
     "@aibos/kernel": "workspace:*",
     "@aibos/listener-demo": "workspace:*",

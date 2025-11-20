@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { createStockItemService } from "../services/createStockItem";
 import { getStockItemListService } from "../services/getStockItemList";
 import { createStockMoveService } from "../services/createStockMove";
+import { getItemValuation } from "../services/getItemValuation";
 import { listStockMoves } from "../data/stockMock";
 import { emitStockItemCreated } from "../events/emitInventoryEvent";
 import { emitStockMovedEvent } from "../events/emitStockMovedEvent";
@@ -92,10 +93,15 @@ export function StockItemPage({ emitEvent }: Props) {
     }
     try {
       const out = createStockMoveService.handler(parsed.data);
+      const unitCost = getItemValuation(parsed.data.itemCode);
+      const qtyDelta = parsed.data.qtyDelta;
       emitStockMovedEvent(emitEvent, {
-        ...out,
         companyId: parsed.data.companyId,
-        reason: parsed.data.reason,
+        itemCode: out.itemCode,
+        qty: Math.abs(qtyDelta),
+        direction: qtyDelta > 0 ? "IN" : "OUT",
+        unitCost,
+        refDoc: parsed.data.refId,
         postingDate: parsed.data.postingDate,
       });
       setResult(
