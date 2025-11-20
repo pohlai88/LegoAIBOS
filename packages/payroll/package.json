@@ -1,0 +1,19 @@
+{
+  "name": "@aibos/payroll",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@aibos/kernel-sdk": "workspace:*",
+    "zod": "^3.23.8",
+    "react": "^18.3.1"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.4"
+  }
+}
