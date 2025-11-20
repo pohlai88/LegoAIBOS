@@ -3,13 +3,14 @@ import { StockItemPage } from "./pages/StockItemPage";
 import { createStockItemService } from "./services/createStockItem";
 import { getStockItemListService } from "./services/getStockItemList";
 import { createStockMoveService } from "./services/createStockMove";
+import { STOCK_MOVED_EVENT } from "./events/emitStockMovedEvent";
 
 // ADR-008: Inventory MVP Stock Item Capture baseline
 // ADR-009: Stock movement operational slice
 const manifest = defineApp({
   id: "inventory",
   name: "Inventory",
-  version: "1.0.1",
+  version: "1.0.2",
 
   ownedEntities: ["StockItem"],
   permissions: ["inventory:read", "inventory:write"],
@@ -35,7 +36,7 @@ const manifest = defineApp({
   ],
 
   events: {
-    emits: ["inventory.STOCK_ITEM_CREATED", "inventory.STOCK_MOVED"],
+    emits: ["inventory.STOCK_ITEM_CREATED", STOCK_MOVED_EVENT],
     consumes: []
   }
 }).manifest;

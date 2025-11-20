@@ -94,6 +94,7 @@ export function StockItemPage({ emitEvent }: Props) {
       const out = createStockMoveService.handler(parsed.data);
       emitStockMovedEvent(emitEvent, {
         ...out,
+        companyId: parsed.data.companyId,
         reason: parsed.data.reason,
         postingDate: parsed.data.postingDate,
       });
