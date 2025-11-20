@@ -19,4 +19,8 @@ export class EventBus {
       this.handlers.set(type, next);
     };
   }
+
+  clear() {
+    this.handlers.clear();
+  }
 }

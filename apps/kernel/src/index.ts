@@ -38,9 +38,24 @@ const kernel = {
     if (apps.list().length > 0) {
       apps.clear();
       services.clear();
+      events.clear();
     }
     for (const a of installs) await adapters.install(a);
     const svcCount = rebuildServiceRegistry();
+
+    // v1.1.1: auto-register listeners if adapter exposes registerListeners(lanes)
+    const bootLanes = kernel.lanes(context.getContext());
+    for (const a of installs) {
+      const hook = (a as any).registerListeners || (a as any).default?.registerListeners;
+      if (typeof hook === "function") {
+        try {
+          hook(bootLanes);
+        } catch (err: any) {
+          console.error(`Adapter listener registration failed for ${a.manifest.id}:`, err?.message);
+        }
+      }
+    }
+
     console.log(
       "Kernel booted with apps:",
       installs.map(i => i.manifest.id + "@" + i.manifest.version),

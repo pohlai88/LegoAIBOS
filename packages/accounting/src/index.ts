@@ -2,9 +2,7 @@ import { defineApp } from "@aibos/kernel-sdk";
 import { JournalEntryPage } from "./pages/JournalEntryPage";
 import { createJournalEntryService } from "./services/createJournalEntry";
 import { getCOAListService } from "./services/getCOAList";
-import { registerInventoryEventListeners } from "./events/registerInventoryListeners";
-import { registerSalesEventListeners } from "./listeners/registerSalesEventListeners";
-import { registerPurchasesEventListeners } from "./listeners/registerPurchasesEventListeners";
+import { registerListeners } from "./listeners/registerListeners";
 
 // ADR-005: Accounting MVP JE Capture baseline
 // ADR-006: COA read-only service (v1.0.1) for junior-usable picker
@@ -45,4 +43,5 @@ const manifest = defineApp({
   }
 }).manifest;
 
-export default { manifest, registerInventoryEventListeners, registerSalesEventListeners, registerPurchasesEventListeners };
+export default { manifest, registerListeners };
+export { registerListeners };

@@ -3,7 +3,6 @@ import { describe, it, expect } from "vitest";
 import kernel from "../../apps/kernel/src/index";
 import inventoryAdapter from "../../packages/inventory/src/index";
 import accountingAdapter from "../../packages/accounting/src/index";
-import { registerInventoryEventListeners } from "../../packages/accounting/src/events/registerInventoryListeners";
 
 describe("Inventory → Accounting event lane (cross-module proof)", () => {
   it("v1.0.3/v1.2.0: accounting auto-drafts JE from STOCK_MOVED event", async () => {
@@ -15,9 +14,8 @@ describe("Inventory → Accounting event lane (cross-module proof)", () => {
 
     let capturedJE: any = null;
 
-    // Register accounting listener via KernelLanes
-    const lanes = kernel.lanes({ tenantId: "test-tenant" });
-    registerInventoryEventListeners(lanes as any);
+    // Use lanes (auto-registration performed during kernel.boot under dev context)
+    const lanes = kernel.lanes();
 
     // Emit STOCK_MOVED event from inventory (v1.0.3 payload structure)
     lanes.events.emit("inventory.STOCK_MOVED", {
