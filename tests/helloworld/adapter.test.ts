@@ -4,6 +4,7 @@ import helloWorldAdapter from "@aibos/helloworld";
 
 import { AppRegistry } from "../../apps/kernel/src/registry/AppRegistry";
 import { AdapterRegistry } from "../../apps/kernel/src/adapters/AdapterRegistry";
+import { ServiceRegistry } from "../../apps/kernel/src/services/ServiceRegistry";
 
 // ADR-001: Kernel baseline lifecycle enforced
 // ADR-002: Manifest schema SSOT via SDK
@@ -32,7 +33,8 @@ describe("HelloWorld adapter v1.0.1 - SSOT compliance + lifecycle", () => {
 
   it("installs adapter and exposes menu/routes/services/events", async () => {
     const apps = new AppRegistry();
-    const adapters = new AdapterRegistry(apps);
+    const services = new ServiceRegistry();
+    const adapters = new AdapterRegistry(apps, services);
 
     await adapters.install(helloWorldAdapter);
 
@@ -48,7 +50,8 @@ describe("HelloWorld adapter v1.0.1 - SSOT compliance + lifecycle", () => {
 
   it("unmount removes adapter without breaking registry", async () => {
     const apps = new AppRegistry();
-    const adapters = new AdapterRegistry(apps);
+    const services = new ServiceRegistry();
+    const adapters = new AdapterRegistry(apps, services);
 
     await adapters.install(helloWorldAdapter);
     adapters.unmount("demo.helloworld");

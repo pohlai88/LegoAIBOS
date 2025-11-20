@@ -10,6 +10,17 @@ export type KernelEvent = {
 
 export type KernelEventType = string;
 
+// v1.1.0: Global event typing helpers (pure TS – no manifest shape change)
+export type KernelEventMap = Record<KernelEventType, unknown>;
+export type KernelEventFor<
+  TMap extends KernelEventMap,
+  TType extends keyof TMap & KernelEventType
+> = KernelEvent & { type: TType; payload: TMap[TType] };
+export type KernelEventHandler<
+  TMap extends KernelEventMap,
+  TType extends keyof TMap & KernelEventType
+> = (event: KernelEventFor<TMap, TType>) => void;
+
 // Context
 export type KernelContext = {
   tenantId: string;
@@ -34,9 +45,10 @@ export const MenuItemSchema = z.object({
 export const ServiceDefSchema = z.object({
   key: z.string(),
   description: z.string().optional(),
+  // Schemas remain untyped at runtime; service lane will attempt .parse if present.
   inputSchema: z.any().optional(),
   outputSchema: z.any().optional(),
-  handler: z.any().optional()
+  handler: z.any().optional() // v1.0.x kept loose; v1.1 service lane adds validation wrapper
 });
 
 export const AppManifestSchema = z.object({
@@ -66,3 +78,6 @@ export function defineApp(manifest: AppManifest) {
   const validated = validateAppManifest(manifest);
   return { manifest: validated };
 }
+
+// v1.1.0: re-export lanes types
+export * from "./lanes";

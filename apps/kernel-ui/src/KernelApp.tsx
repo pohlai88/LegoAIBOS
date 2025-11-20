@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 import kernel from "@aibos/kernel";
+import type { KernelLanes } from "@aibos/kernel-sdk";
 import helloWorldAdapter from "@aibos/helloworld";
 import listenerDemoAdapter from "@aibos/listener-demo";
 import accountingAdapter from "@aibos/accounting";
@@ -52,6 +53,8 @@ export function KernelApp() {
     return routes.find((r: any) => r.path === menu.path);
   }, [activeView, menuItems, routes]);
 
+  const lanes: KernelLanes = kernel.lanes();
+
   if (!booted) {
     return <div style={{ padding: 16, fontFamily: "system-ui" }}>Booting Kernel…</div>;
   }
@@ -90,7 +93,7 @@ export function KernelApp() {
       </aside>
       <main style={{ padding: 12, overflow: "auto" }}>
         {activeRoute ? (
-          React.createElement(activeRoute.component as React.ComponentType<any>)
+          React.createElement(activeRoute.component as React.ComponentType<any>, { lanes })
         ) : (
           <div style={{ opacity: 0.6 }}>Select a module from the sidebar</div>
         )}

@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { createJournalEntryService } from "../services/createJournalEntry";
 import { getCOAListService } from "../services/getCOAList";
+import type { KernelLanes } from "@aibos/kernel-sdk";
 import type { ChartOfAccount } from "../schema/types";
 
 type LineState = {
@@ -10,7 +11,7 @@ type LineState = {
   memo?: string;
 };
 
-export function JournalEntryPage() {
+export function JournalEntryPage({ lanes }: { lanes?: KernelLanes }) {
   const [postingDate, setPostingDate] = useState(() =>
     new Date().toISOString().slice(0, 10)
   );
@@ -25,9 +26,17 @@ export function JournalEntryPage() {
 
   // SSOT: Load COA from local stub (v1.0.1 design — no kernel service yet)
   useEffect(() => {
-    const { accounts } = getCOAListService.handler({ companyId });
-    setCoaList(accounts);
-  }, [companyId]);
+    if (lanes) {
+      const out = lanes.services.call("accounting.getCOAList", { companyId });
+      Promise.resolve(out).then((val: any) => {
+        if (val && val.accounts) setCoaList(val.accounts as any);
+      });
+    } else {
+      // Fallback legacy direct call (pre-v1.1)
+      const { accounts } = getCOAListService.handler({ companyId });
+      setCoaList(accounts as any);
+    }
+  }, [companyId, lanes]);
 
   const totals = useMemo(() => {
     const td = lines.reduce((s, l) => s + Number(l.debit || 0), 0);
@@ -67,8 +76,15 @@ export function JournalEntryPage() {
       return;
     }
 
-    const out = createJournalEntryService.handler(parsed.data);
-    setResult(`Created JE ${out.id}\nDebit=${out.totalDebit} Credit=${out.totalCredit}\nStatus=${out.status}`);
+    let out: any;
+    if (lanes) {
+      out = lanes.services.call("accounting.createJournalEntry", parsed.data);
+    } else {
+      out = createJournalEntryService.handler(parsed.data);
+    }
+    Promise.resolve(out).then((final: any) => {
+      setResult(`Created JE ${final.id}\nDebit=${final.totalDebit} Credit=${final.totalCredit}\nStatus=${final.status}`);
+    });
   }
 
   return (

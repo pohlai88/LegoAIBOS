@@ -16,4 +16,8 @@ export class AppRegistry {
   list() {
     return Array.from(this.apps.values());
   }
+
+  clear() {
+    this.apps.clear();
+  }
 }

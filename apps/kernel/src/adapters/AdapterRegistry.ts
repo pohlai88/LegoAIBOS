@@ -1,8 +1,9 @@
 import { validateAppManifest } from "@aibos/kernel-sdk";
 import { AppRegistry } from "../registry/AppRegistry";
+import { ServiceRegistry } from "../services/ServiceRegistry";
 
 export class AdapterRegistry {
-  constructor(private apps: AppRegistry) {}
+  constructor(private apps: AppRegistry, private services: ServiceRegistry) {}
 
   async install(adapter: any) {
     const manifest = validateAppManifest(adapter.manifest);
@@ -11,6 +12,8 @@ export class AdapterRegistry {
       version: manifest.version,
       manifest
     });
+    // v1.1.0: register services for service lane invocation
+    for (const svc of manifest.services || []) this.services.register(manifest.id, svc);
   }
 
   async upgrade(appId: string, adapter: any) {
@@ -29,9 +32,13 @@ export class AdapterRegistry {
       version: next.version,
       manifest: next
     });
+    // Re-register services from upgraded manifest (drop old ones first)
+    this.services.unregisterApp(appId);
+    for (const svc of next.services || []) this.services.register(appId, svc);
   }
 
   unmount(appId: string) {
     this.apps.delete(appId);
+    this.services.unregisterApp(appId);
   }
 }
