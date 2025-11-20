@@ -34,3 +34,35 @@ export type PurchaseBillPostedPayload = {
 };
 
 export const BILL_POSTED_EVENT = "purchases.BILL_POSTED" as const;
+
+export type PurchasePaymentDraft = {
+  paymentNo: string;
+  postingDate: string;
+  companyId: string;
+  supplierId?: string;
+  currency: string;
+  amount: number;
+
+  method: "bank" | "cash";
+  bankAccountId?: string;   // required if method=bank
+
+  billNo?: string;          // optional linkage
+  memo?: string;
+};
+
+export type PurchasePaymentPostedPayload = {
+  id: string;
+  paymentNo: string;
+  postingDate: string;
+  companyId: string;
+  supplierId?: string;
+  currency: string;
+  amount: number;
+
+  method: "bank" | "cash";
+  bankAccountId?: string;
+  billNo?: string;
+  memo?: string;
+};
+
+export const PAYMENT_MADE_EVENT = "purchases.PAYMENT_MADE" as const;

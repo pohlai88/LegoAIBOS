@@ -10,4 +10,8 @@ describe("Purchases adapter baseline", () => {
   it("declares BILL_POSTED emit", () => {
     expect(adapter.manifest.events?.emits?.includes("purchases.BILL_POSTED")).toBe(true);
   });
+
+  it("declares PAYMENT_MADE emit (v1.0.1)", () => {
+    expect(adapter.manifest.events?.emits?.includes("purchases.PAYMENT_MADE")).toBe(true);
+  });
 });

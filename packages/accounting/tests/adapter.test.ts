@@ -2,9 +2,9 @@ import { describe, it, expect } from "vitest";
 import adapter from "../src/index";
 
 describe("Accounting adapter baseline", () => {
-  it("exports a valid manifest", () => {
+  it("exports a valid manifest with v1.6.0", () => {
     expect(adapter.manifest.id).toBe("accounting");
-    expect(adapter.manifest.version).toBe("1.5.0");
+    expect(adapter.manifest.version).toBe("1.6.0");
   });
 
   it("declares JE route + menu", () => {

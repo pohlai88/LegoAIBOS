@@ -14,10 +14,11 @@ import { registerPurchasesEventListeners } from "./listeners/registerPurchasesEv
 // ADR-012: Sales invoice→AR auto-JE draft (v1.3.0)
 // ADR-013: Cash receipt→AR clearing (v1.4.0)
 // ADR-014/015: Purchases bill→AP auto-JE draft (v1.5.0)
+// ADR-016/017: Purchases payment→AP clearing (v1.6.0)
 const manifest = defineApp({
   id: "accounting",
   name: "Accounting",
-  version: "1.5.0",
+  version: "1.6.0",
 
   ownedEntities: ["JournalEntry", "JournalLine"],
   permissions: ["accounting:read", "accounting:write"],
@@ -40,7 +41,7 @@ const manifest = defineApp({
 
   events: {
     emits: ["accounting.JOURNAL_CREATED"],
-    consumes: ["inventory.STOCK_MOVED", "sales.INVOICE_POSTED", "sales.CASH_RECEIPT_POSTED", "purchases.BILL_POSTED"]
+    consumes: ["inventory.STOCK_MOVED", "sales.INVOICE_POSTED", "sales.CASH_RECEIPT_POSTED", "purchases.BILL_POSTED", "purchases.PAYMENT_MADE"]
   }
 }).manifest;
 
