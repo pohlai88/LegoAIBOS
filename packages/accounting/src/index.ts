@@ -5,10 +5,11 @@ import { getCOAListService } from "./services/getCOAList";
 
 // ADR-005: Accounting MVP JE Capture baseline
 // ADR-006: COA read-only service (v1.0.1) for junior-usable picker
+// ADR-007: JE COA normal balance validation (v1.1.0) for guarded entry
 const manifest = defineApp({
   id: "accounting",
   name: "Accounting",
-  version: "1.0.1",
+  version: "1.1.0",
 
   ownedEntities: ["JournalEntry", "JournalLine"],
   permissions: ["accounting:read", "accounting:write"],

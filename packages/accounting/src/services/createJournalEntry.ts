@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { getAccountNormalBalance } from "../data/coaMock";
 
 const JournalLineSchema = z.object({
   accountId: z.string().min(1),
@@ -16,6 +17,7 @@ export const CreateJournalEntryInputSchema = z.object({
   referenceNo: z.string().optional(),
   referenceDate: z.string().optional(),
   userRemark: z.string().optional(),
+  allowOppositeNormalBalance: z.boolean().optional(),
   lines: z.array(JournalLineSchema).min(2)
 }).refine(d => {
   const td = d.lines.reduce((s, l) => s + l.debit, 0);
@@ -23,6 +25,24 @@ export const CreateJournalEntryInputSchema = z.object({
   return td > 0 && tc > 0 && Math.abs(td - tc) < 0.000001;
 }, {
   message: "Journal must balance: totalDebit = totalCredit and both > 0."
+}).refine(d => {
+  const allowOpposite = d.allowOppositeNormalBalance === true;
+
+  for (const line of d.lines) {
+    const nb = getAccountNormalBalance(line.accountId);
+    if (!nb) return false; // Unknown account
+
+    const debitOnly = line.debit > 0 && line.credit === 0;
+    const creditOnly = line.credit > 0 && line.debit === 0;
+
+    if (!allowOpposite) {
+      if (nb === "debit" && creditOnly) return false;
+      if (nb === "credit" && debitOnly) return false;
+    }
+  }
+  return true;
+}, {
+  message: "Line normal balance mismatch. Use correct Dr/Cr per account or set allowOppositeNormalBalance=true for adjustments."
 });
 
 export const CreateJournalEntryOutputSchema = z.object({
@@ -37,12 +57,13 @@ export type CreateJournalEntryOutput = z.infer<typeof CreateJournalEntryOutputSc
 
 export const createJournalEntryService = {
   key: "accounting.createJournalEntry",
-  description: "Creates a balanced journal entry draft. v1 handler is local-only stub.",
+  description: "Creates a balanced journal entry draft with COA normal balance validation (v1.1.0). Handler is local-only stub.",
   inputSchema: CreateJournalEntryInputSchema,
   outputSchema: CreateJournalEntryOutputSchema,
 
-  // v1.0.0 stub: kernel does not yet proxy writes to DB.
-  // Real DB write lands in v1.1+ once kernel service lanes are final.
+  // v1.1.0: Added normal balance validation against COA
+  // v1.0.0: Balancing validation only
+  // Real DB write lands in v1.2+ once kernel service lanes are final.
   handler: (input: CreateJournalEntryInput): CreateJournalEntryOutput => {
     const totalDebit = input.lines.reduce((s, l) => s + l.debit, 0);
     const totalCredit = input.lines.reduce((s, l) => s + l.credit, 0);

@@ -4,7 +4,7 @@ import adapter from "../src/index";
 describe("Accounting adapter baseline", () => {
   it("exports a valid manifest", () => {
     expect(adapter.manifest.id).toBe("accounting");
-    expect(adapter.manifest.version).toBe("1.0.1");
+    expect(adapter.manifest.version).toBe("1.1.0");
   });
 
   it("declares JE route + menu", () => {
