@@ -18,7 +18,7 @@ import { registerPurchasesEventListeners } from "./listeners/registerPurchasesEv
 const manifest = defineApp({
   id: "accounting",
   name: "Accounting",
-  version: "1.6.1",
+  version: "1.7.0",
 
   ownedEntities: ["JournalEntry", "JournalLine"],
   permissions: ["accounting:read", "accounting:write"],

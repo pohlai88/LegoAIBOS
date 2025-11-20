@@ -15,36 +15,20 @@ describe("Inventory → Accounting event lane (cross-module proof)", () => {
 
     let capturedJE: any = null;
 
-    // Register accounting listener that captures JE draft
-    registerInventoryEventListeners((eventType, handler) => {
-      // Wrap handler to capture result
-      kernel.events.on({ tenantId: "test-tenant" }, eventType, (evt: any) => {
-        try {
-          // Call original handler which creates JE
-          const originalHandler = handler;
-          originalHandler(evt);
-        } catch (error) {
-          // Listener may throw or log - we're just testing it fires
-        }
-      });
-    });
+    // Register accounting listener via KernelLanes
+    const lanes = kernel.lanes({ tenantId: "test-tenant" });
+    registerInventoryEventListeners(lanes as any);
 
     // Emit STOCK_MOVED event from inventory (v1.0.3 payload structure)
-    kernel.events.emit(
-      { tenantId: "test-tenant" },
-      {
-        type: "inventory.STOCK_MOVED",
-        payload: {
-          companyId: "demo.company",
-          itemCode: "ITEM-001",
-          qty: 10,
-          direction: "IN",
-          unitCost: 5,
-          postingDate: "2025-11-20",
-          refDoc: "GRN-001"
-        }
-      }
-    );
+    lanes.events.emit("inventory.STOCK_MOVED", {
+      companyId: "demo.company",
+      itemCode: "ITEM-001",
+      qty: 10,
+      direction: "IN",
+      unitCost: 5,
+      postingDate: "2025-11-20",
+      refDoc: "GRN-001"
+    });
 
     // For v1.2.0: The listener auto-drafts a JE internally
     // We've proven the full JE draft logic in stockMovedToJeDraft.test.ts
