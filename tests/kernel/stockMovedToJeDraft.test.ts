@@ -91,7 +91,7 @@ describe("Stock Movement → Auto-draft JE Integration (v1.0.3/v1.2.0)", () => {
     
     // Verify versions
     expect(invManifest.version).toBe("1.0.3");
-    expect(accManifest.version).toBe("1.7.0");  // v1.7.0: Listener migration to KernelLanes
+    expect(accManifest.version).toBe("1.8.0");  // v1.8.0: Payroll consumption added
   });
 });
 

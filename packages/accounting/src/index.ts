@@ -16,7 +16,7 @@ import { registerListeners } from "./listeners/registerListeners";
 const manifest = defineApp({
   id: "accounting",
   name: "Accounting",
-  version: "1.7.0",
+  version: "1.8.0",
 
   ownedEntities: ["JournalEntry", "JournalLine"],
   permissions: ["accounting:read", "accounting:write"],
@@ -39,7 +39,14 @@ const manifest = defineApp({
 
   events: {
     emits: ["accounting.JOURNAL_CREATED"],
-    consumes: ["inventory.STOCK_MOVED", "sales.INVOICE_POSTED", "sales.CASH_RECEIPT_POSTED", "purchases.BILL_POSTED", "purchases.PAYMENT_MADE"]
+    consumes: [
+      "inventory.STOCK_MOVED",
+      "sales.INVOICE_POSTED",
+      "sales.CASH_RECEIPT_POSTED",
+      "purchases.BILL_POSTED",
+      "purchases.PAYMENT_MADE",
+      "payroll.PAYRUN_POSTED"
+    ]
   }
 }).manifest;
 

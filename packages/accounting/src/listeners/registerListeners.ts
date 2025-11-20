@@ -3,6 +3,7 @@ import type { KernelLanes } from "@aibos/kernel-sdk";
 import { registerInventoryEventListeners } from "../events/registerInventoryListeners";
 import { registerSalesEventListeners } from "./registerSalesEventListeners";
 import { registerPurchasesEventListeners } from "./registerPurchasesEventListeners";
+import { registerPayrollEventListeners } from "./registerPayrollEventListeners";
 
 let registered = false;
 
@@ -12,4 +13,5 @@ export function registerListeners(lanes: KernelLanes) {
   registerInventoryEventListeners(lanes);
   registerSalesEventListeners(lanes);
   registerPurchasesEventListeners(lanes);
+  registerPayrollEventListeners(lanes);
 }

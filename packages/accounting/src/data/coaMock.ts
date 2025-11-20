@@ -13,6 +13,8 @@ export const MOCK_COA: ChartOfAccount[] = [
   { id: "5010", name: "Cost of Goods Sold", type: "expense", category: "Direct Expense", normalBalance: "debit", isActive: true },
   { id: "5100", name: "Office Supplies", type: "expense", category: "Operating Expense", normalBalance: "debit", isActive: true },
   { id: "5200", name: "Salaries & Wages", type: "expense", category: "Operating Expense", normalBalance: "debit", isActive: true }
+  ,{ id: "2030", name: "Payroll Payable", type: "liability", category: "Current Liability", normalBalance: "credit", isActive: true }
+  ,{ id: "2130", name: "EPF Payable (Employee)", type: "liability", category: "Current Liability", normalBalance: "credit", isActive: true }
 ];
 
 
